@@ -29,3 +29,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+### front ###
+eatgo-web/node_modules
