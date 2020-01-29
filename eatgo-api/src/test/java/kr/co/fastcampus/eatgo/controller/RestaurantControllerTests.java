@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
@@ -33,7 +34,11 @@ class RestaurantControllerTests {
     void list() throws Exception {
 
         List<Restaurant> restaurans = new ArrayList<>();
-        restaurans.add(new Restaurant(1004L,"JokerHouse","Seoul"));
+        restaurans.add(Restaurant.builder()
+                    .id(1004L)
+                    .name("JokerHouse")
+                    .address("Seoul")
+                    .build());
         given(restaurantService.getRestaurants()).willReturn(restaurans);
 
         mvc.perform(get("/restaurants"))
@@ -44,10 +49,21 @@ class RestaurantControllerTests {
 
     @Test
     void detail() throws Exception {
-        Restaurant restaurant = new Restaurant(1004L,"JokerHouse","Seoul");
-        restaurant.addMenuItem(new MenuItem("Kimchi"));
+        Restaurant restaurant = Restaurant.builder()
+                    .id(1004L)
+                    .name("JokerHouse")
+                    .address("Seoul")
+                    .build();
+        MenuItem menuItem = MenuItem.builder()
+                    .name("Kimchi")
+                    .build();
+        restaurant.setMenuItems(Arrays.asList(menuItem));
 
-        Restaurant restaurant2 = new Restaurant(2020L,"Cyber food","Seoul");
+        Restaurant restaurant2 = Restaurant.builder()
+                    .id(2020L)
+                    .name("Cyber food")
+                    .address("Seoul")
+                    .build();
 
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
         given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
@@ -70,8 +86,11 @@ class RestaurantControllerTests {
     void create() throws Exception {
         given(restaurantService.addRestaurant(any())).will(invocation ->{
            Restaurant restaurant = invocation.getArgument(0);
-           return new Restaurant(1234L,restaurant.getName(),
-                restaurant.getAddress());
+           return Restaurant.builder()
+                   .id(1234L)
+                   .name(restaurant.getName())
+                   .address(restaurant.getAddress())
+                   .build();
         });
 
         mvc.perform(post("/restaurants")

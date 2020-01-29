@@ -38,14 +38,23 @@ class RestaurantServiceTest {
 
     private void mockMenuItemRepository() {
         List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Kimchi"));
+
+        MenuItem menuItem = MenuItem.builder()
+                .name("Kimchi")
+                .build();
+
+        menuItems.add(menuItem);
         given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
 
     }
 
     private void mockRestaurnatRepository() {
         List<Restaurant> restaurants = new ArrayList<>();
-        Restaurant restaurant = new Restaurant(1004L,"bob zip", "Seoul");
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("bob zip")
+                .address("Seoul")
+                .build();
         restaurants.add(restaurant);
         given(restaurantRepository.findAll()).willReturn(restaurants);
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
@@ -68,16 +77,27 @@ class RestaurantServiceTest {
 
     @Test
     void addRestaurant(){
-        Restaurant restaurant = new Restaurant("BeRyong","Busan");
-        Restaurant saved = new Restaurant(1234L,"BeRyong","Busan");
-        given(restaurantRepository.save(any())).willReturn(saved);
+        given(restaurantRepository.save(any())).will(invocation -> {
+            Restaurant restaurant = invocation.getArgument(0);
+            restaurant.setId(1234L);
+            return restaurant;
+        });
+        Restaurant restaurant = Restaurant.builder()
+                .name("BeRyong")
+                .address("Busan")
+                .build();
+
         Restaurant created = restaurantService.addRestaurant(restaurant);
         assertEquals(created.getId(),1234L);
     }
 
     @Test
     void updateRestaurant(){
-        Restaurant restaurant = new Restaurant(1004L,"Bob zip","Seoul");
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
         given(restaurantRepository.findById(1004L))
                 .willReturn(Optional.of(restaurant));
 
