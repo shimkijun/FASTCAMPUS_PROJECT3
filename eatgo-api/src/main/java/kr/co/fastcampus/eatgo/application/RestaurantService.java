@@ -23,6 +23,7 @@ public class RestaurantService {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
     }
+
     public List<Restaurant> getRestaurants() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         return restaurants;
