@@ -10,6 +10,8 @@ public class Restaurant {
     private String address;
     private List<MenuItem> menuItems = new ArrayList<>();
 
+    public Restaurant(){}
+
     public Restaurant(String name){
         this.name = name;
     }
@@ -25,10 +27,13 @@ public class Restaurant {
         this.address = address;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
-
     public String getName(){
         return name;
     }

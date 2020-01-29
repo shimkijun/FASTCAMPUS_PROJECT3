@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
@@ -62,5 +63,14 @@ class RestaurantServiceTest {
     void getRestaurants(){
         List<Restaurant> restaurants = restaurantService.getRestaurants();
         assertEquals(restaurants.get(0).getId(),1004L);
+    }
+
+    @Test
+    void addRestaurant(){
+        Restaurant restaurant = new Restaurant("BeRyong","Busan");
+        Restaurant saved = new Restaurant(1234L,"BeRyong","Busan");
+        given(restaurantRepository.save(any())).willReturn(saved);
+        Restaurant created = restaurantService.addRestaurant(restaurant);
+        assertEquals(created.getId(),1234L);
     }
 }
