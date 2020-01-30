@@ -48,7 +48,7 @@ class RestaurantControllerTests {
     }
 
     @Test
-    void detail() throws Exception {
+    void detailWithExisted() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                     .id(1004L)
                     .name("JokerHouse")
@@ -83,7 +83,17 @@ class RestaurantControllerTests {
     }
 
     @Test
-    void create() throws Exception {
+    void detailWithNotExisted() throws Exception {
+        given(restaurantService.getRestaurant(404L))
+                .willThrow(new RestaurantNotFoundException(404L));
+
+        mvc.perform(get("/restaurants/404"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{}"));
+    }
+
+    @Test
+    void createWithValidData() throws Exception {
         given(restaurantService.addRestaurant(any())).will(invocation ->{
            Restaurant restaurant = invocation.getArgument(0);
            return Restaurant.builder()
@@ -104,12 +114,38 @@ class RestaurantControllerTests {
     }
 
     @Test
-    void update() throws Exception {
+    void createWithInValidData() throws Exception {
+
+        given(restaurantService.addRestaurant(any())).will(invocation ->{
+            Restaurant restaurant = invocation.getArgument(0);
+            return Restaurant.builder()
+                    .id(1234L)
+                    .name(restaurant.getName())
+                    .address(restaurant.getAddress())
+                    .build();
+        });
+
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\",\"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateWithValidData() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"JOKER Bar\",\"address\":\"BUSAN\"}"))
                 .andExpect(status().isOk());
         verify(restaurantService).updateRestaurant(1004L,"JOKER Bar","BUSAN");
+    }
+
+    @Test
+    void updateWithInValidData() throws Exception {
+        mvc.perform(patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\",\"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
     }
 
 }

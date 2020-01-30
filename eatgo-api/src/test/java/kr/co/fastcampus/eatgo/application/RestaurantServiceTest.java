@@ -61,12 +61,21 @@ class RestaurantServiceTest {
     }
 
     @Test
-    void getRestaurant() {
+    void getRestaurantWithExisted() {
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
         assertEquals(restaurant.getId(),1004L);
 
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertEquals(menuItem.getName(),"Kimchi");
+    }
+
+    @Test
+    public void getRestaurantWithNotExisted() {
+        Throwable exception = assertThrows(RestaurantNotFoundException.class,() -> {
+            restaurantService.getRestaurant(404L);
+        });
+
+        assertEquals("Could Not Find Restaurant 404",exception.getMessage());
     }
 
     @Test
