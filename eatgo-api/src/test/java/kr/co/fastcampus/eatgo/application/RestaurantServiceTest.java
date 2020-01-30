@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -14,7 +13,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class RestaurantServiceTest {
@@ -27,13 +28,15 @@ class RestaurantServiceTest {
     @Mock
     private MenuItemRepository menuItemRepository;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
     @BeforeEach
     void setUp(){
         MockitoAnnotations.initMocks(this);
         mockRestaurnatRepository();
         mockMenuItemRepository();
-        restaurantService = new RestaurantService(
-                restaurantRepository,menuItemRepository);
+        restaurantService = new RestaurantService(restaurantRepository,menuItemRepository,reviewRepository);
     }
 
     private void mockMenuItemRepository() {
@@ -63,6 +66,10 @@ class RestaurantServiceTest {
     @Test
     void getRestaurantWithExisted() {
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
+
+        verify(menuItemRepository).findAllByRestaurantId(1004L);
+        verify(reviewRepository).findAllByRestaurantId(1004L);
+
         assertEquals(restaurant.getId(),1004L);
 
         MenuItem menuItem = restaurant.getMenuItems().get(0);

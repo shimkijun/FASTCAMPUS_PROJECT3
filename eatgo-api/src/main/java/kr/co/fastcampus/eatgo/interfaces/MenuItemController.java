@@ -14,8 +14,12 @@ import java.util.List;
 @RestController
 public class MenuItemController {
 
-    @Autowired
     private MenuItemService menuItemService;
+
+    @Autowired
+    public MenuItemController(MenuItemService menuItemService) {
+        this.menuItemService = menuItemService;
+    }
 
     @PatchMapping("/restaurants/{restaurantId}/menuitems")
     public String bulkUpdate(

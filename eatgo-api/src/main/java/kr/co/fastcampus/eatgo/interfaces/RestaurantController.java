@@ -15,8 +15,12 @@ import java.util.List;
 @RestController
 public class RestaurantController {
 
-    @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    public RestaurantController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
     @GetMapping("/restaurants")
     public List<Restaurant> list(){
