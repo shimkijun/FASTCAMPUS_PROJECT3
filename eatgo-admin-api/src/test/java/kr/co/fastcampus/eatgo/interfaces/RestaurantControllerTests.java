@@ -1,9 +1,7 @@
 package kr.co.fastcampus.eatgo.interfaces;
 
-import kr.co.fastcampus.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
 import kr.co.fastcampus.eatgo.domain.RestaurantNotFoundException;
-import kr.co.fastcampus.eatgo.domain.Review;
 import kr.co.fastcampus.eatgo.application.RestaurantService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
@@ -34,10 +31,10 @@ class RestaurantControllerTests {
 
     @Test
     void list() throws Exception {
-
         List<Restaurant> restaurans = new ArrayList<>();
         restaurans.add(Restaurant.builder()
                     .id(1004L)
+                    .categoryId(1L)
                     .name("JokerHouse")
                     .address("Seoul")
                     .build());
@@ -85,10 +82,9 @@ class RestaurantControllerTests {
                    .address(restaurant.getAddress())
                    .build();
         });
-
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Beryong\",\"address\":\"Seoul\"}"))
+                .content("{\"categoryId\":1,\"name\":\"Beryong\",\"address\":\"Seoul\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location","/restaurants/1234"))
                 .andExpect(content().string("{}"));
@@ -110,7 +106,7 @@ class RestaurantControllerTests {
 
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"\",\"address\":\"\"}"))
+                .content("{\"categoryId\":,\"name\":\"\",\"address\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -118,7 +114,7 @@ class RestaurantControllerTests {
     void updateWithValidData() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"JOKER Bar\",\"address\":\"BUSAN\"}"))
+                .content("{\"categoryId\":1,\"name\":\"JOKER Bar\",\"address\":\"BUSAN\"}"))
                 .andExpect(status().isOk());
         verify(restaurantService).updateRestaurant(1004L,"JOKER Bar","BUSAN");
     }
@@ -127,7 +123,7 @@ class RestaurantControllerTests {
     void updateWithInValidData() throws Exception {
         mvc.perform(patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"\",\"address\":\"\"}"))
+                .content("{\"categoryId\":,\"name\":\"\",\"address\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 

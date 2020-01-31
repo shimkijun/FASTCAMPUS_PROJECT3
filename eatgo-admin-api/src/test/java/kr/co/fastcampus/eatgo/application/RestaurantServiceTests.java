@@ -14,8 +14,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+
 @SpringBootTest
-class RestaurantServiceTest {
+class RestaurantServiceTests {
 
     private RestaurantService restaurantService;
 
@@ -34,6 +35,7 @@ class RestaurantServiceTest {
         List<Restaurant> restaurants = new ArrayList<>();
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("bob zip")
                 .address("Seoul")
                 .build();

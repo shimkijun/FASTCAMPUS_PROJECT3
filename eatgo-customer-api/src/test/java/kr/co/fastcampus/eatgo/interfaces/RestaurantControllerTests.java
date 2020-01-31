@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -17,9 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,16 +31,18 @@ class RestaurantControllerTests {
 
     @Test
     void list() throws Exception {
-
         List<Restaurant> restaurans = new ArrayList<>();
         restaurans.add(Restaurant.builder()
                     .id(1004L)
+                    .categoryId(1L)
                     .name("JokerHouse")
                     .address("Seoul")
                     .build());
-        given(restaurantService.getRestaurants()).willReturn(restaurans);
 
-        mvc.perform(get("/restaurants"))
+        given(restaurantService.getRestaurants("Seoul",1L))
+                .willReturn(restaurans);
+
+        mvc.perform(get("/restaurants?region=Seoul&category=1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1004")))
                 .andExpect(content().string(containsString("\"name\":\"JokerHouse\"")));
@@ -53,6 +52,7 @@ class RestaurantControllerTests {
     void detailWithExisted() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                     .id(1004L)
+                    .categoryId(1L)
                     .name("JokerHouse")
                     .address("Seoul")
                     .build();
