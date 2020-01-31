@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,15 +29,13 @@ class ReviewControllerTests {
 
     @Test
     void createWithValidAttributes() throws Exception {
-        given(reviewService.addReview(any())).will(invocation ->{
-            Review review = invocation.getArgument(0);
-            return Review.builder()
-                    .id(1004L)
-                    .name(review.getName())
-                    .score(review.getScore())
-                    .description(review.getDescription())
-                    .build();
-        });
+        given(reviewService.addReview(eq(1L),any())).willReturn(Review.builder()
+                .id(1004L)
+                .name("JOKER")
+                .score(3)
+                .description("JMT")
+                .build()
+        );
 
         mvc.perform(post("/restaurants/1/reviews")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,7 +43,7 @@ class ReviewControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location","/restaurants/1/reviews/1004"));
 
-        verify(reviewService).addReview(any());
+        verify(reviewService).addReview(eq(1L),any());
     }
 
     @Test
@@ -54,7 +53,7 @@ class ReviewControllerTests {
                 .content("{}"))
                 .andExpect(status().isBadRequest());
 
-        verify(reviewService,never()).addReview(any());
+        verify(reviewService,never()).addReview(eq(1L),any());
     }
 
 }

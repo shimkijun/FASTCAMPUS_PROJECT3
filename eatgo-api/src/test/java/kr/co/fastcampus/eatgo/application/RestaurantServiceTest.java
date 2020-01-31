@@ -36,8 +36,10 @@ class RestaurantServiceTest {
         MockitoAnnotations.initMocks(this);
         mockRestaurnatRepository();
         mockMenuItemRepository();
+        mockReviewRepository();
         restaurantService = new RestaurantService(restaurantRepository,menuItemRepository,reviewRepository);
     }
+
 
     private void mockMenuItemRepository() {
         List<MenuItem> menuItems = new ArrayList<>();
@@ -63,6 +65,17 @@ class RestaurantServiceTest {
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
     }
 
+    private void mockReviewRepository() {
+        List<Review> reviews = new ArrayList<>();
+        reviews.add(Review.builder()
+                .name("BeRyong")
+                .score(1)
+                .description("Bad")
+                .build());
+
+        given(reviewRepository.findAllByRestaurantId(1004L))
+            .willReturn(reviews);
+    }
     @Test
     void getRestaurantWithExisted() {
         Restaurant restaurant = restaurantService.getRestaurant(1004L);
@@ -74,6 +87,9 @@ class RestaurantServiceTest {
 
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertEquals(menuItem.getName(),"Kimchi");
+
+        Review review = restaurant.getReviews().get(0);
+        assertEquals(review.getDescription(),"Bad");
     }
 
     @Test

@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -36,7 +37,7 @@ class ReviewServiceTests {
                 .description("jmt")
                 .build();
 
-        reviewService.addReview(review);
+        reviewService.addReview(eq(1L),review);
         verify(reviewRepository).save(any());
     }
 }
