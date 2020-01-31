@@ -3,10 +3,7 @@ package kr.co.fastcampus.eatgo.interfaces;
 import kr.co.fastcampus.eatgo.application.MenuItemService;
 import kr.co.fastcampus.eatgo.domain.MenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +15,11 @@ public class MenuItemController {
     @Autowired
     public MenuItemController(MenuItemService menuItemService) {
         this.menuItemService = menuItemService;
+    }
+
+    @GetMapping("/restaurants/{restaurantId}/menuitems")
+    public List<MenuItem> list(@PathVariable Long restaurantId){
+        return menuItemService.getMenuItems(restaurantId);
     }
 
     @PatchMapping("/restaurants/{restaurantId}/menuitems")
