@@ -48,4 +48,5 @@ class UserControllerTests {
         verify(userService).registerUser(
                 eq("tester@example.com"),eq("tester"), eq("test"));
     }
+
 }
