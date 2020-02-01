@@ -30,13 +30,7 @@ class ReviewServiceTests {
 
     @Test
     void addReview() {
-        Review review = Review.builder()
-                .name("JOKER")
-                .score(3)
-                .description("jmt")
-                .build();
-
-        reviewService.addReview(eq(1L),review);
+        reviewService.addReview(1004L,"JOKER",3,"JMT");
         verify(reviewRepository).save(any());
     }
 }
