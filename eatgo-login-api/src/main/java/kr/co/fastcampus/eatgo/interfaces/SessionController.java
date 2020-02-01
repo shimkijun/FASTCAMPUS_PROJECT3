@@ -16,15 +16,12 @@ import java.net.URISyntaxException;
 @RestController
 public class SessionController {
 
+    @Autowired
     private UserService userService;
 
-    private final JwtUtil jwtUtil;
-
     @Autowired
-    public SessionController(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
+    private JwtUtil jwtUtil;
+
 
     @PostMapping("/session")
     public ResponseEntity<SessionResponseDto> create(
@@ -36,7 +33,10 @@ public class SessionController {
 
         User user = userService.authenticate(email,password);
 
-        String accessToken = jwtUtil.createToken(user.getId(),user.getName());
+        String accessToken = jwtUtil.createToken(
+                user.getId(),
+                user.getName(),
+                user.isRestaurantOwner() ? user.getRestaurantId() : null);
 
         String url = "/session";
 

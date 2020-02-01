@@ -24,4 +24,21 @@ class UserTests {
 
     }
 
+    @Test
+    void restaurantOwner(){
+        User user = User.builder()
+                .email("tester@example.com")
+                .name("테스터")
+                .level(1L)
+                .build();
+        assertEquals(user.isRestaurantOwner(),false);
+
+        user.setRestaurantId(1004L);
+
+        assertEquals(user.isRestaurantOwner(),true);
+
+        assertEquals(user.getRestaurantId(),1004L);
+
+    }
+
 }
