@@ -1,8 +1,7 @@
+HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**
-!**/src/test/**
 
 ### STS ###
 .apt_generated
@@ -31,5 +30,10 @@ out/
 .vscode/
 
 
-### front ###
-eatgo-web/node_modules
+### .env
+/.env
+
+### data
+/data
+
+node_modules
